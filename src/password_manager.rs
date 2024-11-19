@@ -43,7 +43,7 @@ impl PasswordManagerApp {
     }
 }
 
-pub fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: PasswordManagerApp) -> io::Result<()> {
+pub fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: PasswordManagerApp) -> io::Result<char> {
 
     loop {
         terminal.draw(|f| {
@@ -92,7 +92,7 @@ pub fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: PasswordManagerA
                 .highlight_style(Style::default().fg(Color::LightYellow));
             f.render_widget(list, chunks[1]);
 
-            let footer = Paragraph::new("Use Up/Down to navigate, 'a' to add, 'q' to quit")
+            let footer = Paragraph::new("Use Up/Down to navigate, 'a' to add, 'q' to quit, b to go back to menu")
                 .style(Style::default().fg(Color::White))
                 .block(Block::default().borders(Borders::ALL).title("Help"));
             f.render_widget(footer, chunks[2]);
@@ -102,7 +102,10 @@ pub fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: PasswordManagerA
             match key.code {
                 KeyCode::Char('q') => {
                     terminal.clear()?;
-                    return Ok(())},
+                    return Ok('q')},
+                KeyCode::Char('b') => {
+                    terminal.clear()?;
+                    return Ok('b')},
                 KeyCode::Down => app.next(),
                 KeyCode::Up => app.previous(),
                 KeyCode::Char('a') => {

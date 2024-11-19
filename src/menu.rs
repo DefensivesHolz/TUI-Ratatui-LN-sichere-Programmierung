@@ -5,7 +5,7 @@ use crossterm::event::{self, Event, KeyCode};
 use ratatui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout},
-    style::{Color, Style},
+    style::{Color, Style, Stylize},
     text::{Line, Span},
     widgets::{Block, Borders, Paragraph, BorderType},
     Terminal,
@@ -24,7 +24,7 @@ impl MenuApp {
                 "1. See Passwords".to_string(),
                 "2. Change Passwords".to_string(),
             ],
-            choice: 220, // Default value
+            choice: 0, // Default value
         }
     }
 
@@ -43,20 +43,28 @@ impl MenuApp {
                         ]
                         .as_ref(),
                     )
-                    .split(f.size());
+                    .split(f.area());
+
+
+                let header = Paragraph::new("Menu")
+                .style(Style::default().fg(Color::Red))
+                .block(
+                    Block::default()
+                        .borders(Borders::ALL)
+                        .border_type(BorderType::Rounded)
+                        .border_style(Style::new().light_green())
+                );
+                f.render_widget(header, chunks[0]);
 
                 let p1 = Paragraph::new("1. See Passwords")
                     .style(Style::default().fg(Color::Yellow))
                     .block(
                         Block::default()
                             .borders(Borders::ALL)
-                            .title(Span::styled(
-                                "Menu",
-                                Style::default().fg(Color::Red).bg(Color::Black),
-                            ))
+                            
                             .border_type(BorderType::Rounded),
                     );
-                f.render_widget(p1, chunks[0]);
+                f.render_widget(p1, chunks[1]);
 
                 let p2 = Paragraph::new("2. Change Passwords")
                     .style(Style::default().fg(Color::Yellow))
@@ -65,7 +73,7 @@ impl MenuApp {
                             .borders(Borders::ALL)
                             .border_type(BorderType::Rounded),
                     );
-                f.render_widget(p2, chunks[1]);
+                f.render_widget(p2, chunks[2]);
 
                 let input_paragraph = Paragraph::new(Line::from(vec![Span::raw(format!(
                     "Choice: {}",
@@ -77,14 +85,14 @@ impl MenuApp {
                         .borders(Borders::ALL)
                         .title("Enter your choice (1 or 2 or ...) or press Esc to quit"),
                 );
-                f.render_widget(input_paragraph, chunks[2]);
+                f.render_widget(input_paragraph, chunks[3]);
             })?;
 
             if let Event::Key(key) = event::read()? {
                 match key.code {
                     KeyCode::Char('1') => self.choice = 1,
                     KeyCode::Char('2') => self.choice = 2,
-                    KeyCode::Backspace => self.choice = 220, // Default value
+                    KeyCode::Backspace => self.choice = 0, // Default value
                     KeyCode::Enter => return Ok(self.choice),
                     KeyCode::Esc => {
                         terminal.clear()?;
