@@ -1,3 +1,4 @@
+mod password_display;
 mod status;
 mod login;
 mod menu;
@@ -41,12 +42,12 @@ fn main() -> io::Result<()> {
     let mut login_app = login::LoginApp::new();
     let res1 = login_app.run(&mut terminal);
 
+    terminal.clear()?;
 
-    //run menu
-    /*let menu_return = run_menu(terminal);
-    let menu_app = menu_return.0;
-    let res2 = menu_return.1;
-    */
+    let mut password_display1 = password_display::Password_Application::new();
+    password_display1.run(&mut terminal)?;
+/* 
+
     let mut menu_app = menu::MenuApp::new();
     let res2 = menu_app.run(&mut terminal);
 
@@ -80,14 +81,14 @@ fn main() -> io::Result<()> {
 
 
 
+        terminal::disable_raw_mode()?;
+        terminal.show_cursor()?;
 
 
 
+    */
 
 
-    //if let Err(err) = res {
-    //    eprintln!("{:?}", err);
-    //}
 
     Ok(())
 }
