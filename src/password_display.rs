@@ -49,7 +49,7 @@ impl Password_Application{
     pub fn next(&mut self) {
         self.selected = (self.selected + 1) % self.password.len();
     }
-    pub fn draw_line(&mut self, passwird_info : Password_Info, i : usize, frame: &mut Frame<'_>, layout : Rc<[Rect]>){
+    pub fn draw_line(&mut self, i : usize, frame: &mut Frame<'_>, layout : &Rc<[Rect]>){
         frame.render_widget(Paragraph::new(self.password[i].url.as_str()), layout[0]);
         frame.render_widget(Paragraph::new(self.password[i].name.as_str()), layout[1]);
         frame.render_widget(Paragraph::new(self.password[i].last_modified.as_str()),layout[2]);
@@ -78,10 +78,11 @@ impl Password_Application{
             .split(outer_layout[0]);
         
              // Line ausgeben
+            self.draw_line( 0, frame, &line_layout);
 
-            frame.render_widget(Paragraph::new(self.password[0].url.as_str()), line_layout[0]);
-            frame.render_widget(Paragraph::new(self.password[0].name.as_str()),  line_layout[1]);
-            frame.render_widget(Paragraph::new(self.password[0].last_modified.as_str()), line_layout[2]);
+            //frame.render_widget(Paragraph::new(self.password[0].url.as_str()), line_layout[0]);
+            //frame.render_widget(Paragraph::new(self.password[0].name.as_str()),  line_layout[1]);
+            //frame.render_widget(Paragraph::new(self.password[0].last_modified.as_str()), line_layout[2]);
 
             })?;
         
