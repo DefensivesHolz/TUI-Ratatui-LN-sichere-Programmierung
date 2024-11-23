@@ -8,7 +8,7 @@ use ratatui::{
     widgets::{Block, Borders, Paragraph, BorderType},
     Terminal,
 };
-use std::io::{self, Error};
+use std::{io::{self, Error}, rc::Rc};
 
 pub struct Password_Info{
     id : u8,
@@ -48,6 +48,11 @@ impl Password_Application{
 
     pub fn next(&mut self) {
         self.selected = (self.selected + 1) % self.password.len();
+    }
+    pub fn draw_line(&mut self, passwird_info : Password_Info, i : usize, frame: &mut Frame<'_>, layout : Rc<[Rect]>){
+        frame.render_widget(Paragraph::new(self.password[i].url.as_str()), layout[0]);
+        frame.render_widget(Paragraph::new(self.password[i].name.as_str()), layout[1]);
+        frame.render_widget(Paragraph::new(self.password[i].last_modified.as_str()),layout[2]);
     }
 
     pub fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>)->Result<(), Error>{
